@@ -1,0 +1,299 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#f5f5f5;}
+.cd-page{
+  max-width:720px;margin:0 auto;padding:48px 16px;min-height:100vh;
+  background-color:#f5f5f5;
+  background-image:radial-gradient(circle at 1px 1px,#ddd 1px,transparent 0);
+  background-size:24px 24px;
+}
+#cd{
+  background:#ffffff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04),0 12px 40px rgba(0,0,0,0.06);
+}
+.cd-nav{height:44px;padding:0 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;}
+.cd-logo{font-family:'Space Mono',monospace;font-size:13px;font-weight:400;color:#0a0a0a;}
+.cd-tag{font-size:11px;color:#aaa;font-family:'Space Mono',monospace;}
+.cd-input-row{padding:16px 20px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;gap:10px;align-items:center;}
+.cd-color-wrap{position:relative;width:36px;height:36px;flex-shrink:0;}
+.cd-color-preview{width:100%;height:100%;border-radius:8px;border:1px solid #e0e0e0;pointer-events:none;}
+.cd-picker{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;}
+.cd-picker::-webkit-color-swatch-wrapper{padding:0;}
+.cd-picker::-webkit-color-swatch{border:none;border-radius:8px;}
+.cd-hex-input{flex:1;font-family:'Space Mono',monospace;font-size:15px;color:#0a0a0a;border:1px solid #e8e8e8;border-radius:6px;padding:8px 12px;height:36px;background:transparent;outline:none;transition:border-color 0.1s ease;}
+.cd-hex-input:focus{border-color:#aaa;}
+.cd-generate{background:#0a0a0a;color:#ffffff;border:none;border-radius:6px;padding:0 20px;height:36px;font-size:13px;font-family:'Space Mono',monospace;cursor:pointer;transition:background 0.1s ease;}
+.cd-generate:hover{background:#333;}
+.cd-swatches{border-bottom:1px solid #f0f0f0;}
+.cd-swatches-label{font-size:10px;font-family:'Space Mono',monospace;color:#aaa;letter-spacing:0.15em;text-transform:uppercase;padding:16px 20px 10px;}
+.cd-swatch-row{padding:0 20px 16px;display:flex;gap:6px;}
+.cd-swatch{height:56px;border-radius:8px;flex:1;cursor:pointer;display:flex;align-items:flex-end;padding:4px 6px;transition:transform 0.1s ease;}
+.cd-swatch:hover{transform:translateY(-2px);}
+.cd-swatch-label{font-size:10px;font-family:'Space Mono',monospace;line-height:1;}
+.cd-swatch-stop{font-size:9px;opacity:0.7;}
+.cd-tokens{border-bottom:1px solid #f0f0f0;}
+.cd-tokens-label{font-size:10px;font-family:'Space Mono',monospace;color:#aaa;letter-spacing:0.15em;text-transform:uppercase;padding:16px 20px 10px;}
+.cd-token-grid{padding:0 20px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.cd-token{background:#f9f9f9;border:1px solid #f0f0f0;border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center;transition:border-color 0.1s ease;}
+.cd-token:hover{border-color:#d0d0d0;}
+.cd-token-swatch{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);flex-shrink:0;}
+.cd-token-name{font-size:10px;font-family:'Space Mono',monospace;color:#888;margin-bottom:3px;}
+.cd-token-hex{font-size:12px;font-family:'Space Mono',monospace;color:#0a0a0a;font-weight:500;}
+.cd-exports{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cd-export-block{background:#f9f9f9;border:1px solid #f0f0f0;border-radius:8px;padding:12px 14px;}
+.cd-export-header{display:flex;justify-content:space-between;align-items:center;}
+.cd-export-title{font-size:10px;font-family:'Space Mono',monospace;color:#888;letter-spacing:0.12em;text-transform:uppercase;}
+.cd-copy-btn{font-size:10px;font-family:'Space Mono',monospace;color:#888;border:1px solid #e0e0e0;background:#ffffff;border-radius:4px;padding:3px 8px;cursor:pointer;transition:color 0.1s ease,border-color 0.1s ease;}
+.cd-copy-btn:hover{color:#0a0a0a;border-color:#aaa;}
+.cd-copy-btn.done{color:#1D9E75;border-color:#1D9E75;}
+.cd-code{font-size:11px;font-family:'Space Mono',monospace;color:#555;line-height:1.8;margin-top:8px;max-height:120px;overflow:hidden;white-space:pre-wrap;word-break:break-all;}
+.cd-footer{padding:10px 20px;background:#fafafa;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;}
+.cd-footer span{font-size:11px;font-family:'Space Mono',monospace;color:#ccc;}
+</style>
+
+<div class="cd-page">
+<div id="cd">
+  <div class="cd-nav">
+    <div class="cd-logo">Colordump</div>
+    <div class="cd-tag">day 48 · ship69</div>
+  </div>
+  <div class="cd-input-row">
+    <label class="cd-color-wrap">
+      <div class="cd-color-preview" id="cd-preview" style="background:#378ADD;"></div>
+      <input type="color" id="cd-picker" class="cd-picker" value="#378ADD" oninput="onPickerChange(this.value)">
+    </label>
+    <input class="cd-hex-input" id="cd-hex" placeholder="#378ADD" value="#378ADD" oninput="onHexInput(this.value)" maxlength="7" />
+    <button class="cd-generate" onclick="generate()">Generate →</button>
+  </div>
+  <div class="cd-swatches" id="cd-swatches-wrap" style="display:none;">
+    <div class="cd-swatches-label">Shade scale — click any swatch to copy hex</div>
+    <div class="cd-swatch-row" id="cd-swatch-row"></div>
+  </div>
+  <div class="cd-tokens" id="cd-tokens-wrap" style="display:none;">
+    <div class="cd-tokens-label">Semantic design tokens</div>
+    <div class="cd-token-grid" id="cd-token-grid"></div>
+  </div>
+  <div class="cd-exports" id="cd-exports-wrap" style="display:none;">
+    <div class="cd-export-block">
+      <div class="cd-export-header">
+        <div class="cd-export-title">CSS variables</div>
+        <button class="cd-copy-btn" onclick="copyExport('css',this)">copy</button>
+      </div>
+      <div class="cd-code" id="cd-css-out"></div>
+    </div>
+    <div class="cd-export-block">
+      <div class="cd-export-header">
+        <div class="cd-export-title">Tailwind config</div>
+        <button class="cd-copy-btn" onclick="copyExport('tw',this)">copy</button>
+      </div>
+      <div class="cd-code" id="cd-tw-out"></div>
+    </div>
+    <div class="cd-export-block">
+      <div class="cd-export-header">
+        <div class="cd-export-title">Figma tokens (JSON)</div>
+        <button class="cd-copy-btn" onclick="copyExport('figma',this)">copy</button>
+      </div>
+      <div class="cd-code" id="cd-figma-out"></div>
+    </div>
+    <div class="cd-export-block">
+      <div class="cd-export-header">
+        <div class="cd-export-title">SCSS variables</div>
+        <button class="cd-copy-btn" onclick="copyExport('scss',this)">copy</button>
+      </div>
+      <div class="cd-code" id="cd-scss-out"></div>
+    </div>
+  </div>
+  <div class="cd-footer">
+    <span>click swatch to copy hex · click generate to update</span>
+    <span id="cd-base-info"></span>
+  </div>
+</div>
+</div>
+
+<script>
+let currentColor='#378ADD';
+let generatedShades=[];
+let exports={css:'',tw:'',figma:'',scss:''};
+
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16);
+  const g=parseInt(hex.slice(3,5),16);
+  const b=parseInt(hex.slice(5,7),16);
+  return{r,g,b};
+}
+
+function rgbToHsl(r,g,b){
+  r/=255;g/=255;b/=255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}
+  else{
+    const d=max-min;
+    s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){
+      case r:h=(g-b)/d+(g<b?6:0);break;
+      case g:h=(b-r)/d+2;break;
+      case b:h=(r-g)/d+4;break;
+    }
+    h/=6;
+  }
+  return{h:h*360,s:s*100,l:l*100};
+}
+
+function hslToHex(h,s,l){
+  h/=360;s/=100;l/=100;
+  let r,g,b;
+  if(s===0){r=g=b=l;}
+  else{
+    const hue2rgb=(p,q,t)=>{
+      if(t<0)t+=1;if(t>1)t-=1;
+      if(t<1/6)return p+(q-p)*6*t;
+      if(t<1/2)return q;
+      if(t<2/3)return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    const q=l<0.5?l*(1+s):l+s-l*s;
+    const p=2*l-q;
+    r=hue2rgb(p,q,h+1/3);
+    g=hue2rgb(p,q,h);
+    b=hue2rgb(p,q,h-1/3);
+  }
+  const toHex=x=>Math.round(x*255).toString(16).padStart(2,'0');
+  return`#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function getTextColor(hex){
+  const{r,g,b}=hexToRgb(hex);
+  const lum=(0.299*r+0.587*g+0.114*b)/255;
+  return lum>0.5?'#1a1a1a':'#f0f0f0';
+}
+
+function generateShades(hex){
+  const{h,s,l}=rgbToHsl(...Object.values(hexToRgb(hex)));
+  const stops=[
+    {stop:50,l:96,s:Math.min(s*0.3,30)},
+    {stop:100,l:92,s:Math.min(s*0.4,40)},
+    {stop:200,l:82,s:Math.min(s*0.6,55)},
+    {stop:300,l:70,s:Math.min(s*0.8,65)},
+    {stop:400,l:58,s:Math.min(s*0.9,75)},
+    {stop:500,l:l,s:s},
+    {stop:600,l:Math.max(l-12,20),s:Math.min(s*1.05,95)},
+    {stop:700,l:Math.max(l-22,14),s:Math.min(s*1.1,95)},
+    {stop:800,l:Math.max(l-32,10),s:Math.min(s*1.1,90)},
+    {stop:900,l:Math.max(l-42,6),s:Math.min(s*1.05,85)},
+  ];
+  return stops.map(({stop,l:sl,s:ss})=>({
+    stop,
+    hex:hslToHex(h,ss,sl)
+  }));
+}
+
+function onPickerChange(val){
+  currentColor=val;
+  document.getElementById('cd-hex').value=val;
+  document.getElementById('cd-preview').style.background=val;
+}
+
+function onHexInput(val){
+  if(/^#[0-9a-fA-F]{6}$/.test(val)){
+    currentColor=val;
+    document.getElementById('cd-preview').style.background=val;
+    document.getElementById('cd-picker').value=val;
+  }
+}
+
+function generate(){
+  const hex=document.getElementById('cd-hex').value.trim();
+  if(!/^#[0-9a-fA-F]{6}$/.test(hex)){
+    document.getElementById('cd-hex').style.borderColor='#e53935';
+    setTimeout(()=>document.getElementById('cd-hex').style.borderColor='',1200);
+    return;
+  }
+  currentColor=hex;
+  document.getElementById('cd-preview').style.background=hex;
+  generatedShades=generateShades(hex);
+  renderSwatches();
+  renderTokens();
+  renderExports();
+  document.getElementById('cd-swatches-wrap').style.display='block';
+  document.getElementById('cd-tokens-wrap').style.display='block';
+  document.getElementById('cd-exports-wrap').style.display='block';
+  document.getElementById('cd-base-info').textContent='base: '+hex;
+}
+
+function renderSwatches(){
+  const row=document.getElementById('cd-swatch-row');
+  row.innerHTML=generatedShades.map(({stop,hex})=>{
+    const tc=getTextColor(hex);
+    return`<div class="cd-swatch" style="background:${hex};" onclick="copyHex('${hex}',this)" title="${stop}: ${hex}">
+      <div>
+        <div class="cd-swatch-stop" style="color:${tc};">${stop}</div>
+        <div class="cd-swatch-label" style="color:${tc};">${hex}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyHex(hex,el){
+  navigator.clipboard.writeText(hex).catch(()=>{});
+  el.style.outline='2px solid #0a0a0a';
+  setTimeout(()=>el.style.outline='',1000);
+}
+
+function renderTokens(){
+  const TOKENS=[
+    {name:'--color-primary',stop:500},
+    {name:'--color-primary-hover',stop:600},
+    {name:'--color-primary-light',stop:100},
+    {name:'--color-primary-surface',stop:50},
+    {name:'--color-primary-border',stop:200},
+    {name:'--color-primary-text',stop:700},
+    {name:'--color-primary-emphasis',stop:800},
+    {name:'--color-primary-subtle',stop:300},
+  ];
+  const grid=document.getElementById('cd-token-grid');
+  grid.innerHTML=TOKENS.map(({name,stop})=>{
+    const shade=generatedShades.find(s=>s.stop===stop)||generatedShades[5];
+    return`<div class="cd-token">
+      <div class="cd-token-swatch" style="background:${shade.hex};"></div>
+      <div>
+        <div class="cd-token-name">${name}</div>
+        <div class="cd-token-hex">${shade.hex}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderExports(){
+  const cssLines=generatedShades.map(({stop,hex})=>`  --color-primary-${stop}: ${hex};`).join('\n');
+  const css=`:root {\n${cssLines}\n}`;
+
+  const twLines=generatedShades.map(({stop,hex})=>`    '${stop}': '${hex}',`).join('\n');
+  const tw=`colors: {\n  primary: {\n${twLines}\n  }\n}`;
+
+  const figmaObj={};
+  generatedShades.forEach(({stop,hex})=>{figmaObj[stop]={value:hex,type:'color'};});
+  const figma=JSON.stringify({primary:figmaObj},null,2);
+
+  const scssLines=generatedShades.map(({stop,hex})=>`$color-primary-${stop}: ${hex};`).join('\n');
+
+  exports={css,tw,figma,scss:scssLines};
+
+  document.getElementById('cd-css-out').textContent=css.length>300?css.slice(0,300)+'...':css;
+  document.getElementById('cd-tw-out').textContent=tw.length>300?tw.slice(0,300)+'...':tw;
+  document.getElementById('cd-figma-out').textContent=figma.length>300?figma.slice(0,300)+'...':figma;
+  document.getElementById('cd-scss-out').textContent=scssLines;
+}
+
+function copyExport(type,btn){
+  navigator.clipboard.writeText(exports[type]).catch(()=>{});
+  const orig=btn.textContent;
+  btn.textContent='copied';
+  btn.classList.add('done');
+  setTimeout(()=>{btn.textContent=orig;btn.classList.remove('done');},2000);
+}
+
+generate();
+</script>

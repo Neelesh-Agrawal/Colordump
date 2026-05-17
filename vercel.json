@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/sero_sleep_app.html"
+    }
+  ]
+}
