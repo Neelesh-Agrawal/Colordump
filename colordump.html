@@ -79,7 +79,7 @@ footer{color:var(--muted);font-size:.8rem;padding:34px 0 40px;display:flex;justi
 footer a{color:inherit}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:.85rem;font-weight:600;transition:all .25s;pointer-events:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
-@media (max-width:900px){.two{grid-template-columns:1fr}.scale{grid-template-columns:repeat(6,1fr)}.sw{min-height:96px}}
+@media (max-width:900px){.two{grid-template-columns:minmax(0,1fr)}.two>*,section.block{min-width:0}.tok{min-width:0}.tok>*{min-width:0;overflow-wrap:anywhere}.scale{grid-template-columns:repeat(6,1fr)}.sw{min-height:96px}}
 @media (max-width:560px){.scale{grid-template-columns:repeat(4,1fr)}.tokens{grid-template-columns:1fr}.hex,.name{flex:1;width:auto}.input-bar .spacer{display:none}section.block{padding:16px}}
 </style>
 </head>
