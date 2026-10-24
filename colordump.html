@@ -1,299 +1,298 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Colordump · One colour in, a full token system out</title>
+<meta name="description" content="Turn one brand colour into a perceptually even shade scale, a tinted neutral scale, light and dark semantic tokens, and code for CSS, Tailwind, SCSS and design tokens.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{min-height:100%;background:#f5f5f5;}
-.cd-page{
-  max-width:720px;margin:0 auto;padding:48px 16px;min-height:100vh;
-  background-color:#f5f5f5;
-  background-image:radial-gradient(circle at 1px 1px,#ddd 1px,transparent 0);
-  background-size:24px 24px;
-}
-#cd{
-  background:#ffffff;border:1px solid #e8e8e8;border-radius:12px;overflow:hidden;
-  box-shadow:0 1px 2px rgba(0,0,0,0.04),0 12px 40px rgba(0,0,0,0.06);
-}
-.cd-nav{height:44px;padding:0 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;}
-.cd-logo{font-family:'Space Mono',monospace;font-size:13px;font-weight:400;color:#0a0a0a;}
-.cd-tag{font-size:11px;color:#aaa;font-family:'Space Mono',monospace;}
-.cd-input-row{padding:16px 20px;background:#fafafa;border-bottom:1px solid #f0f0f0;display:flex;gap:10px;align-items:center;}
-.cd-color-wrap{position:relative;width:36px;height:36px;flex-shrink:0;}
-.cd-color-preview{width:100%;height:100%;border-radius:8px;border:1px solid #e0e0e0;pointer-events:none;}
-.cd-picker{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;margin:0;}
-.cd-picker::-webkit-color-swatch-wrapper{padding:0;}
-.cd-picker::-webkit-color-swatch{border:none;border-radius:8px;}
-.cd-hex-input{flex:1;font-family:'Space Mono',monospace;font-size:15px;color:#0a0a0a;border:1px solid #e8e8e8;border-radius:6px;padding:8px 12px;height:36px;background:transparent;outline:none;transition:border-color 0.1s ease;}
-.cd-hex-input:focus{border-color:#aaa;}
-.cd-generate{background:#0a0a0a;color:#ffffff;border:none;border-radius:6px;padding:0 20px;height:36px;font-size:13px;font-family:'Space Mono',monospace;cursor:pointer;transition:background 0.1s ease;}
-.cd-generate:hover{background:#333;}
-.cd-swatches{border-bottom:1px solid #f0f0f0;}
-.cd-swatches-label{font-size:10px;font-family:'Space Mono',monospace;color:#aaa;letter-spacing:0.15em;text-transform:uppercase;padding:16px 20px 10px;}
-.cd-swatch-row{padding:0 20px 16px;display:flex;gap:6px;}
-.cd-swatch{height:56px;border-radius:8px;flex:1;cursor:pointer;display:flex;align-items:flex-end;padding:4px 6px;transition:transform 0.1s ease;}
-.cd-swatch:hover{transform:translateY(-2px);}
-.cd-swatch-label{font-size:10px;font-family:'Space Mono',monospace;line-height:1;}
-.cd-swatch-stop{font-size:9px;opacity:0.7;}
-.cd-tokens{border-bottom:1px solid #f0f0f0;}
-.cd-tokens-label{font-size:10px;font-family:'Space Mono',monospace;color:#aaa;letter-spacing:0.15em;text-transform:uppercase;padding:16px 20px 10px;}
-.cd-token-grid{padding:0 20px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-.cd-token{background:#f9f9f9;border:1px solid #f0f0f0;border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center;transition:border-color 0.1s ease;}
-.cd-token:hover{border-color:#d0d0d0;}
-.cd-token-swatch{width:28px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);flex-shrink:0;}
-.cd-token-name{font-size:10px;font-family:'Space Mono',monospace;color:#888;margin-bottom:3px;}
-.cd-token-hex{font-size:12px;font-family:'Space Mono',monospace;color:#0a0a0a;font-weight:500;}
-.cd-exports{padding:16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.cd-export-block{background:#f9f9f9;border:1px solid #f0f0f0;border-radius:8px;padding:12px 14px;}
-.cd-export-header{display:flex;justify-content:space-between;align-items:center;}
-.cd-export-title{font-size:10px;font-family:'Space Mono',monospace;color:#888;letter-spacing:0.12em;text-transform:uppercase;}
-.cd-copy-btn{font-size:10px;font-family:'Space Mono',monospace;color:#888;border:1px solid #e0e0e0;background:#ffffff;border-radius:4px;padding:3px 8px;cursor:pointer;transition:color 0.1s ease,border-color 0.1s ease;}
-.cd-copy-btn:hover{color:#0a0a0a;border-color:#aaa;}
-.cd-copy-btn.done{color:#1D9E75;border-color:#1D9E75;}
-.cd-code{font-size:11px;font-family:'Space Mono',monospace;color:#555;line-height:1.8;margin-top:8px;max-height:120px;overflow:hidden;white-space:pre-wrap;word-break:break-all;}
-.cd-footer{padding:10px 20px;background:#fafafa;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;}
-.cd-footer span{font-size:11px;font-family:'Space Mono',monospace;color:#ccc;}
+:root{--bg:#f6f4ef;--panel:#fff;--ink:#16130f;--muted:#6b645b;--line:#e4dfd6;--soft:#efebe3;--accent:#378add;--r:16px;--mono:'JetBrains Mono',ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#121110;--panel:#1b1a18;--ink:#f3efe8;--muted:#a39b90;--line:#2e2b27;--soft:#24221f}}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.55 Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header.top{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+.brand i{width:26px;height:26px;border-radius:8px;background:conic-gradient(from 90deg,var(--accent),#f7b955,#e5487a,var(--accent))}
+.top a{font-size:.82rem;color:var(--muted);text-decoration:none}.top a:hover{color:var(--ink)}
+.hero{padding:28px 0 22px}
+.hero h1{font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.05;letter-spacing:-.035em;max-width:16ch}
+.hero p{color:var(--muted);max-width:56ch;margin-top:12px}
+.input-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:22px;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.swatch-in{position:relative;width:46px;height:46px;border-radius:12px;overflow:hidden;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.swatch-in input{position:absolute;inset:-8px;width:62px;height:62px;border:0;padding:0;cursor:pointer}
+.hex{width:130px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-family:var(--mono);text-transform:uppercase}
+.hex.bad{border-color:#e5484d}
+.name{width:140px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.btn{padding:11px 16px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-weight:600;font-size:.9rem;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.input-bar .spacer{flex:1}
+.presets{display:flex;gap:6px;flex-wrap:wrap}
+.presets button{width:26px;height:26px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line)}
+section.block{margin-top:26px;padding:22px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.block-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.block-h h2{font-size:1.05rem;letter-spacing:-.01em}
+.block-h p{color:var(--muted);font-size:.85rem}
+.scale{display:grid;grid-template-columns:repeat(11,1fr);gap:6px}
+.sw{border:0;border-radius:12px;min-height:118px;padding:10px 8px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;position:relative;transition:transform .15s}
+.sw:hover{transform:translateY(-3px)}
+.sw b{font-size:.78rem;font-weight:600}
+.sw span{font:500 .66rem var(--mono);text-transform:uppercase;opacity:.9}
+.sw em{font-style:normal;font:500 .6rem var(--mono);display:flex;gap:4px;flex-wrap:wrap}
+.sw em i{font-style:normal;padding:1px 4px;border-radius:4px;background:rgba(255,255,255,.22)}
+.sw.base::after{content:'BASE';position:absolute;top:8px;right:8px;font:600 .55rem var(--mono);letter-spacing:.08em;padding:2px 5px;border-radius:4px;background:rgba(0,0,0,.25);color:#fff}
+.sw.copied::before{content:'Copied';position:absolute;inset:0;display:grid;place-items:center;border-radius:12px;background:rgba(0,0,0,.55);color:#fff;font-size:.78rem;font-weight:600}
+.row-label{font:500 .72rem var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 8px}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;margin-top:26px}
+.two section.block{margin-top:0}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--soft);gap:2px}
+.seg button{border:0;background:transparent;padding:6px 12px;border-radius:8px;font-size:.82rem;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.tokens{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tok{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--line);border-radius:10px}
+.tok i{width:30px;height:30px;border-radius:8px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.tok b{display:block;font:500 .74rem var(--mono)}
+.tok span{font:400 .7rem var(--mono);color:var(--muted)}
+.preview{border-radius:14px;padding:22px;background:var(--p-bg);color:var(--p-text);border:1px solid var(--p-border);transition:background .3s,color .3s}
+.p-card{background:var(--p-surface);border:1px solid var(--p-border);border-radius:12px;padding:18px}
+.p-badge{display:inline-block;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--p-primary-soft);color:var(--p-primary-strong)}
+.p-card h3{margin:10px 0 6px;font-size:1.15rem;letter-spacing:-.02em}
+.p-card p{color:var(--p-text-muted);font-size:.88rem}
+.p-field{margin-top:14px;display:flex;gap:8px}
+.p-field input{flex:1;min-width:0;padding:10px 12px;border-radius:9px;border:1px solid var(--p-border);background:var(--p-bg);color:var(--p-text)}
+.p-field input:focus{outline:3px solid var(--p-ring);outline-offset:1px}
+.p-btn{padding:10px 16px;border:0;border-radius:9px;background:var(--p-primary);color:var(--p-on-primary);font-weight:600}
+.p-btn:hover{background:var(--p-primary-hover)}
+.p-alert{margin-top:14px;padding:10px 12px;border-radius:9px;background:var(--p-primary-soft);color:var(--p-primary-strong);font-size:.82rem;border:1px solid var(--p-primary-border)}
+.p-link{color:var(--p-primary-strong);font-weight:600}
+.code-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.code-tabs button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 12px;font-size:.8rem;font-weight:600;color:var(--muted)}
+.code-tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+pre{font:400 .78rem/1.6 var(--mono);background:#141311;color:#e9e4da;border-radius:12px;padding:16px;overflow:auto;max-height:420px;white-space:pre}
+.code-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+footer{color:var(--muted);font-size:.8rem;padding:34px 0 40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer a{color:inherit}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:.85rem;font-weight:600;transition:all .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (max-width:900px){.two{grid-template-columns:1fr}.scale{grid-template-columns:repeat(6,1fr)}.sw{min-height:96px}}
+@media (max-width:560px){.scale{grid-template-columns:repeat(4,1fr)}.tokens{grid-template-columns:1fr}.hex,.name{flex:1;width:auto}.input-bar .spacer{display:none}section.block{padding:16px}}
 </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="brand"><i aria-hidden="true"></i>Colordump</div><a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">A Ship69 tool by Neelesh ↗</a></header>
 
-<div class="cd-page">
-<div id="cd">
-  <div class="cd-nav">
-    <div class="cd-logo">Colordump</div>
-    <div class="cd-tag">day 48 · ship69</div>
-  </div>
-  <div class="cd-input-row">
-    <label class="cd-color-wrap">
-      <div class="cd-color-preview" id="cd-preview" style="background:#378ADD;"></div>
-      <input type="color" id="cd-picker" class="cd-picker" value="#378ADD" oninput="onPickerChange(this.value)">
-    </label>
-    <input class="cd-hex-input" id="cd-hex" placeholder="#378ADD" value="#378ADD" oninput="onHexInput(this.value)" maxlength="7" />
-    <button class="cd-generate" onclick="generate()">Generate →</button>
-  </div>
-  <div class="cd-swatches" id="cd-swatches-wrap" style="display:none;">
-    <div class="cd-swatches-label">Shade scale — click any swatch to copy hex</div>
-    <div class="cd-swatch-row" id="cd-swatch-row"></div>
-  </div>
-  <div class="cd-tokens" id="cd-tokens-wrap" style="display:none;">
-    <div class="cd-tokens-label">Semantic design tokens</div>
-    <div class="cd-token-grid" id="cd-token-grid"></div>
-  </div>
-  <div class="cd-exports" id="cd-exports-wrap" style="display:none;">
-    <div class="cd-export-block">
-      <div class="cd-export-header">
-        <div class="cd-export-title">CSS variables</div>
-        <button class="cd-copy-btn" onclick="copyExport('css',this)">copy</button>
-      </div>
-      <div class="cd-code" id="cd-css-out"></div>
-    </div>
-    <div class="cd-export-block">
-      <div class="cd-export-header">
-        <div class="cd-export-title">Tailwind config</div>
-        <button class="cd-copy-btn" onclick="copyExport('tw',this)">copy</button>
-      </div>
-      <div class="cd-code" id="cd-tw-out"></div>
-    </div>
-    <div class="cd-export-block">
-      <div class="cd-export-header">
-        <div class="cd-export-title">Figma tokens (JSON)</div>
-        <button class="cd-copy-btn" onclick="copyExport('figma',this)">copy</button>
-      </div>
-      <div class="cd-code" id="cd-figma-out"></div>
-    </div>
-    <div class="cd-export-block">
-      <div class="cd-export-header">
-        <div class="cd-export-title">SCSS variables</div>
-        <button class="cd-copy-btn" onclick="copyExport('scss',this)">copy</button>
-      </div>
-      <div class="cd-code" id="cd-scss-out"></div>
+  <div class="hero">
+    <h1>One colour in. A full token system out.</h1>
+    <p>Pick a brand colour. Colordump builds an even 50–950 scale, a matching tinted neutral scale, light and dark semantic tokens, and code you can paste into CSS, Tailwind, SCSS or Figma.</p>
+    <div class="input-bar">
+      <label class="swatch-in" title="Pick a colour"><input type="color" id="picker" value="#378add" aria-label="Pick a colour"></label>
+      <input class="hex" id="hex" value="#378ADD" maxlength="7" aria-label="Hex colour" spellcheck="false">
+      <input class="name" id="name" value="primary" aria-label="Token name" spellcheck="false">
+      <div class="presets" aria-label="Example colours"></div>
+      <span class="spacer"></span>
+      <button class="btn" id="random">Random</button>
+      <button class="btn" id="share">Copy link</button>
     </div>
   </div>
-  <div class="cd-footer">
-    <span>click swatch to copy hex · click generate to update</span>
-    <span id="cd-base-info"></span>
+
+  <section class="block">
+    <div class="block-h"><h2>Shade scale</h2><p>Perceptually even (OKLCH). Click a shade to copy it. Badges show WCAG contrast against white and black.</p></div>
+    <div class="row-label" id="label-brand">primary</div>
+    <div class="scale" id="scale-brand"></div>
+    <div class="row-label">neutral · tinted with your hue</div>
+    <div class="scale" id="scale-neutral"></div>
+  </section>
+
+  <div class="two">
+    <section class="block">
+      <div class="block-h"><h2>Semantic tokens</h2><div class="seg" role="group" aria-label="Theme"><button data-theme="light" aria-pressed="true">Light</button><button data-theme="dark" aria-pressed="false">Dark</button></div></div>
+      <div class="tokens" id="tokens"></div>
+    </section>
+    <section class="block">
+      <div class="block-h"><h2>Live preview</h2><p>Built only from the tokens.</p></div>
+      <div class="preview" id="preview">
+        <div class="p-card">
+          <span class="p-badge">New release</span>
+          <h3>Your palette, on a real interface</h3>
+          <p>Buttons, inputs, focus rings and alerts use the semantic tokens, so you can judge contrast before you ship. <a class="p-link" href="#" onclick="return false">Learn more</a></p>
+          <div class="p-field"><input placeholder="you@studio.com" aria-label="Preview input"><button class="p-btn">Subscribe</button></div>
+          <div class="p-alert">Tip: tab into the input to see the focus ring colour.</div>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <section class="block">
+    <div class="block-h"><h2>Export</h2><p>Includes both scales and the light and dark tokens.</p></div>
+    <div class="code-tabs" role="group" aria-label="Format"></div>
+    <pre id="code" tabindex="0"></pre>
+    <div class="code-actions"><button class="btn" id="download">Download</button><button class="btn primary" id="copy">Copy code</button></div>
+  </section>
+
+  <footer><span>Colordump · made during Ship69, rebuilt Oct 2026.</span><a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">neeleshagrawal.vercel.app</a></footer>
 </div>
-</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-let currentColor='#378ADD';
-let generatedShades=[];
-let exports={css:'',tw:'',figma:'',scss:''};
+// ---------- colour maths: sRGB <-> OKLab/OKLCH ----------
+const hexToRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+const toLin = c => c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+const toGam = c => c <= 0.0031308 ? 12.92 * c : 1.055 * Math.sign(c) * Math.abs(c) ** (1 / 2.4) - 0.055;
+function rgbToOklch([r, g, b]) {
+  [r, g, b] = [r, g, b].map(toLin);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+  return [L, Math.hypot(A, B), (Math.atan2(B, A) * 180 / Math.PI + 360) % 360];
+}
+function oklchToRgb([L, C, H]) {
+  const a = C * Math.cos(H * Math.PI / 180), b = C * Math.sin(H * Math.PI / 180);
+  const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s].map(toGam);
+}
+const inGamut = rgb => rgb.every(c => c >= -0.0005 && c <= 1.0005);
+// Reduce chroma until the colour fits in sRGB.
+function fit([L, C, H]) { let c = C, rgb = oklchToRgb([L, c, H]); while (!inGamut(rgb) && c > 0) { c -= 0.002; rgb = oklchToRgb([L, Math.max(0, c), H]); } return rgb.map(v => Math.min(1, Math.max(0, v))); }
+const rgbToHex = rgb => '#' + rgb.map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
+const lum = hex => { const [r, g, b] = hexToRgb(hex).map(toLin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const contrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+const grade = r => r >= 7 ? 'AAA' : r >= 4.5 ? 'AA' : r >= 3 ? 'AA·L' : '–';
 
-function hexToRgb(hex){
-  const r=parseInt(hex.slice(1,3),16);
-  const g=parseInt(hex.slice(3,5),16);
-  const b=parseInt(hex.slice(5,7),16);
-  return{r,g,b};
+// ---------- scales ----------
+const STOPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const LIGHT = [0.975, 0.94, 0.885, 0.81, 0.72, 0.63, 0.545, 0.47, 0.39, 0.32, 0.25];
+function buildScale(hex, neutral = false) {
+  const [L0, C0, H] = rgbToOklch(hexToRgb(hex));
+  // anchor the base colour on its nearest stop so it appears unchanged in the scale
+  let baseIdx = 0; LIGHT.forEach((l, i) => { if (Math.abs(l - L0) < Math.abs(LIGHT[baseIdx] - L0)) baseIdx = i; });
+  return STOPS.map((stop, i) => {
+    if (!neutral && i === baseIdx) return { stop, hex: hex.toLowerCase(), base: true };
+    const t = Math.abs(i - 5) / 5;
+    const c = neutral ? Math.min(0.018, C0 * 0.12) * (1 - t * 0.3) : C0 * (1 - Math.pow(t, 1.6) * 0.75);
+    return { stop, hex: rgbToHex(fit([LIGHT[i], c, H])) };
+  });
 }
 
-function rgbToHsl(r,g,b){
-  r/=255;g/=255;b/=255;
-  const max=Math.max(r,g,b),min=Math.min(r,g,b);
-  let h,s,l=(max+min)/2;
-  if(max===min){h=s=0;}
-  else{
-    const d=max-min;
-    s=l>0.5?d/(2-max-min):d/(max+min);
-    switch(max){
-      case r:h=(g-b)/d+(g<b?6:0);break;
-      case g:h=(b-r)/d+2;break;
-      case b:h=(r-g)/d+4;break;
-    }
-    h/=6;
-  }
-  return{h:h*360,s:s*100,l:l*100};
+// ---------- semantic tokens ----------
+const pick = (scale, stop) => scale.find(s => s.stop === stop).hex;
+const onColor = bg => contrast(bg, '#ffffff') >= contrast(bg, '#111111') ? '#ffffff' : '#111111';
+function semantic(brand, neutral, theme) {
+  const light = theme === 'light';
+  const primary = light ? pick(brand, 600) : pick(brand, 400);
+  return {
+    bg: light ? '#ffffff' : pick(neutral, 950),
+    surface: light ? pick(neutral, 50) : pick(neutral, 900),
+    border: light ? pick(neutral, 200) : pick(neutral, 800),
+    text: light ? pick(neutral, 950) : pick(neutral, 50),
+    'text-muted': light ? pick(neutral, 600) : pick(neutral, 400),
+    primary,
+    'primary-hover': light ? pick(brand, 700) : pick(brand, 300),
+    'on-primary': onColor(primary),
+    'primary-soft': light ? pick(brand, 100) : pick(brand, 900),
+    'primary-border': light ? pick(brand, 200) : pick(brand, 800),
+    'primary-strong': light ? pick(brand, 800) : pick(brand, 200),
+    ring: light ? pick(brand, 300) : pick(brand, 600),
+  };
 }
 
-function hslToHex(h,s,l){
-  h/=360;s/=100;l/=100;
-  let r,g,b;
-  if(s===0){r=g=b=l;}
-  else{
-    const hue2rgb=(p,q,t)=>{
-      if(t<0)t+=1;if(t>1)t-=1;
-      if(t<1/6)return p+(q-p)*6*t;
-      if(t<1/2)return q;
-      if(t<2/3)return p+(q-p)*(2/3-t)*6;
-      return p;
-    };
-    const q=l<0.5?l*(1+s):l+s-l*s;
-    const p=2*l-q;
-    r=hue2rgb(p,q,h+1/3);
-    g=hue2rgb(p,q,h);
-    b=hue2rgb(p,q,h-1/3);
-  }
-  const toHex=x=>Math.round(x*255).toString(16).padStart(2,'0');
-  return`#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
+// ---------- state ----------
+const $ = s => document.querySelector(s);
+const state = { hex: '#378add', name: 'primary', theme: 'light', format: 'css', brand: [], neutral: [] };
+const slug = s => (s || 'primary').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'primary';
 
-function getTextColor(hex){
-  const{r,g,b}=hexToRgb(hex);
-  const lum=(0.299*r+0.587*g+0.114*b)/255;
-  return lum>0.5?'#1a1a1a':'#f0f0f0';
-}
-
-function generateShades(hex){
-  const{h,s,l}=rgbToHsl(...Object.values(hexToRgb(hex)));
-  const stops=[
-    {stop:50,l:96,s:Math.min(s*0.3,30)},
-    {stop:100,l:92,s:Math.min(s*0.4,40)},
-    {stop:200,l:82,s:Math.min(s*0.6,55)},
-    {stop:300,l:70,s:Math.min(s*0.8,65)},
-    {stop:400,l:58,s:Math.min(s*0.9,75)},
-    {stop:500,l:l,s:s},
-    {stop:600,l:Math.max(l-12,20),s:Math.min(s*1.05,95)},
-    {stop:700,l:Math.max(l-22,14),s:Math.min(s*1.1,95)},
-    {stop:800,l:Math.max(l-32,10),s:Math.min(s*1.1,90)},
-    {stop:900,l:Math.max(l-42,6),s:Math.min(s*1.05,85)},
-  ];
-  return stops.map(({stop,l:sl,s:ss})=>({
-    stop,
-    hex:hslToHex(h,ss,sl)
-  }));
-}
-
-function onPickerChange(val){
-  currentColor=val;
-  document.getElementById('cd-hex').value=val;
-  document.getElementById('cd-preview').style.background=val;
-}
-
-function onHexInput(val){
-  if(/^#[0-9a-fA-F]{6}$/.test(val)){
-    currentColor=val;
-    document.getElementById('cd-preview').style.background=val;
-    document.getElementById('cd-picker').value=val;
-  }
-}
-
-function generate(){
-  const hex=document.getElementById('cd-hex').value.trim();
-  if(!/^#[0-9a-fA-F]{6}$/.test(hex)){
-    document.getElementById('cd-hex').style.borderColor='#e53935';
-    setTimeout(()=>document.getElementById('cd-hex').style.borderColor='',1200);
-    return;
-  }
-  currentColor=hex;
-  document.getElementById('cd-preview').style.background=hex;
-  generatedShades=generateShades(hex);
-  renderSwatches();
+function render() {
+  const n = slug(state.name);
+  state.brand = buildScale(state.hex);
+  state.neutral = buildScale(state.hex, true);
+  document.documentElement.style.setProperty('--accent', state.hex);
+  $('#label-brand').textContent = n;
+  $('#scale-brand').innerHTML = state.brand.map(sw).join('');
+  $('#scale-neutral').innerHTML = state.neutral.map(sw).join('');
   renderTokens();
-  renderExports();
-  document.getElementById('cd-swatches-wrap').style.display='block';
-  document.getElementById('cd-tokens-wrap').style.display='block';
-  document.getElementById('cd-exports-wrap').style.display='block';
-  document.getElementById('cd-base-info').textContent='base: '+hex;
+  renderCode();
+  history.replaceState(null, '', `#${state.hex.slice(1)}${n !== 'primary' ? '-' + n : ''}`);
+}
+function sw({ stop, hex, base }) {
+  const fg = onColor(hex), w = contrast(hex, '#ffffff'), k = contrast(hex, '#000000');
+  return `<button class="sw${base ? ' base' : ''}" style="background:${hex};color:${fg}" data-hex="${hex}" aria-label="${stop} ${hex}, copy">
+    <b>${stop}</b><span>${hex}</span><em><i>W ${w.toFixed(1)} ${grade(w)}</i><i>B ${k.toFixed(1)} ${grade(k)}</i></em></button>`;
+}
+function renderTokens() {
+  const t = semantic(state.brand, state.neutral, state.theme);
+  $('#tokens').innerHTML = Object.entries(t).map(([k, v]) => `<div class="tok"><i style="background:${v}"></i><div><b>--${k}</b><span>${v}</span></div></div>`).join('');
+  const p = $('#preview');
+  Object.entries(t).forEach(([k, v]) => p.style.setProperty(`--p-${k}`, v));
 }
 
-function renderSwatches(){
-  const row=document.getElementById('cd-swatch-row');
-  row.innerHTML=generatedShades.map(({stop,hex})=>{
-    const tc=getTextColor(hex);
-    return`<div class="cd-swatch" style="background:${hex};" onclick="copyHex('${hex}',this)" title="${stop}: ${hex}">
-      <div>
-        <div class="cd-swatch-stop" style="color:${tc};">${stop}</div>
-        <div class="cd-swatch-label" style="color:${tc};">${hex}</div>
-      </div>
-    </div>`;
-  }).join('');
+// ---------- exports ----------
+const FORMATS = { css: 'CSS variables', tw4: 'Tailwind v4', tw3: 'Tailwind v3', scss: 'SCSS', json: 'Design tokens (JSON)' };
+function code(fmt) {
+  const n = slug(state.name), B = state.brand, N = state.neutral;
+  const L = semantic(B, N, 'light'), D = semantic(B, N, 'dark');
+  const lines = (pre, sep, end, scale, name) => scale.map(s => `${pre}${name}-${s.stop}${sep}${s.hex}${end}`).join('\n');
+  const sem = (o, pre, sep, end, suf = '') => Object.entries(o).map(([k, v]) => `${pre}${k}${suf}${sep}${v}${end}`).join('\n');
+  if (fmt === 'css') return `:root {\n${lines('  --', ': ', ';', B, n)}\n${lines('  --', ': ', ';', N, 'neutral')}\n\n${sem(L, '  --', ': ', ';')}\n}\n\n[data-theme="dark"] {\n${sem(D, '  --', ': ', ';')}\n}`;
+  if (fmt === 'tw4') return `@import "tailwindcss";\n\n@theme {\n${lines('  --color-', ': ', ';', B, n)}\n${lines('  --color-', ': ', ';', N, 'neutral')}\n}\n\n/* semantic tokens */\n:root {\n${sem(L, '  --', ': ', ';')}\n}\n.dark {\n${sem(D, '  --', ': ', ';')}\n}`;
+  if (fmt === 'tw3') { const obj = sc => sc.map(s => `          ${s.stop}: '${s.hex}',`).join('\n'); return `// tailwind.config.js\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        '${n}': {\n${obj(B)}\n        },\n        neutral: {\n${obj(N)}\n        },\n      },\n    },\n  },\n};`; }
+  if (fmt === 'scss') return `${lines('$', ': ', ';', B, n)}\n${lines('$', ': ', ';', N, 'neutral')}\n\n// light theme\n${sem(L, '$', ': ', ';')}\n\n// dark theme\n${sem(D, '$', ': ', ';', '-dark')}`;
+  const tok = sc => Object.fromEntries(sc.map(s => [s.stop, { $type: 'color', $value: s.hex }]));
+  const tokS = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, { $type: 'color', $value: v }]));
+  return JSON.stringify({ color: { [n]: tok(B), neutral: tok(N) }, semantic: { light: tokS(L), dark: tokS(D) } }, null, 2);
 }
+const renderCode = () => { $('#code').textContent = code(state.format); };
 
-function copyHex(hex,el){
-  navigator.clipboard.writeText(hex).catch(()=>{});
-  el.style.outline='2px solid #0a0a0a';
-  setTimeout(()=>el.style.outline='',1000);
+// ---------- UI wiring ----------
+const toast = msg => { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 1600); };
+const copy = (text, msg) => navigator.clipboard.writeText(text).then(() => toast(msg)).catch(() => toast('Copy failed, select and copy manually'));
+function setHex(v, from) {
+  if (!/^#[0-9a-f]{6}$/i.test(v)) { $('#hex').classList.add('bad'); return; }
+  $('#hex').classList.remove('bad');
+  state.hex = v.toLowerCase();
+  if (from !== 'picker') $('#picker').value = state.hex;
+  if (from !== 'hex') $('#hex').value = state.hex.toUpperCase();
+  render();
 }
+$('#picker').addEventListener('input', e => setHex(e.target.value, 'picker'));
+$('#hex').addEventListener('input', e => { let v = e.target.value.trim(); if (!v.startsWith('#')) v = '#' + v; if (v.length === 7) setHex(v, 'hex'); });
+$('#name').addEventListener('input', e => { state.name = e.target.value; render(); });
+$('#random').addEventListener('click', () => setHex(rgbToHex(fit([0.55 + Math.random() * 0.15, 0.1 + Math.random() * 0.12, Math.random() * 360]))));
+$('#share').addEventListener('click', () => copy(location.href, 'Link copied'));
+const presets = ['#378add', '#e5487a', '#16a34a', '#f59e0b', '#7c3aed', '#0f766e', '#ea580c', '#111827'];
+$('.presets').innerHTML = presets.map(c => `<button style="background:${c}" data-c="${c}" aria-label="Use ${c}"></button>`).join('');
+$('.presets').addEventListener('click', e => { const c = e.target.dataset.c; if (c) setHex(c); });
+document.addEventListener('click', e => {
+  const s = e.target.closest('.sw'); if (!s) return;
+  copy(s.dataset.hex, `${s.dataset.hex} copied`); s.classList.add('copied'); setTimeout(() => s.classList.remove('copied'), 700);
+});
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  state.theme = b.dataset.theme; document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderTokens();
+}));
+$('.code-tabs').innerHTML = Object.entries(FORMATS).map(([k, v], i) => `<button data-f="${k}" aria-pressed="${i === 0}">${v}</button>`).join('');
+$('.code-tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.format = b.dataset.f; $('.code-tabs').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); renderCode(); });
+$('#copy').addEventListener('click', () => copy($('#code').textContent, `${FORMATS[state.format]} copied`));
+$('#download').addEventListener('click', () => {
+  const ext = { css: 'css', tw4: 'css', tw3: 'js', scss: 'scss', json: 'json' }[state.format];
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('#code').textContent], { type: 'text/plain' }));
+  a.download = `${slug(state.name)}-tokens.${ext}`; a.click(); URL.revokeObjectURL(a.href);
+});
 
-function renderTokens(){
-  const TOKENS=[
-    {name:'--color-primary',stop:500},
-    {name:'--color-primary-hover',stop:600},
-    {name:'--color-primary-light',stop:100},
-    {name:'--color-primary-surface',stop:50},
-    {name:'--color-primary-border',stop:200},
-    {name:'--color-primary-text',stop:700},
-    {name:'--color-primary-emphasis',stop:800},
-    {name:'--color-primary-subtle',stop:300},
-  ];
-  const grid=document.getElementById('cd-token-grid');
-  grid.innerHTML=TOKENS.map(({name,stop})=>{
-    const shade=generatedShades.find(s=>s.stop===stop)||generatedShades[5];
-    return`<div class="cd-token">
-      <div class="cd-token-swatch" style="background:${shade.hex};"></div>
-      <div>
-        <div class="cd-token-name">${name}</div>
-        <div class="cd-token-hex">${shade.hex}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderExports(){
-  const cssLines=generatedShades.map(({stop,hex})=>`  --color-primary-${stop}: ${hex};`).join('\n');
-  const css=`:root {\n${cssLines}\n}`;
-
-  const twLines=generatedShades.map(({stop,hex})=>`    '${stop}': '${hex}',`).join('\n');
-  const tw=`colors: {\n  primary: {\n${twLines}\n  }\n}`;
-
-  const figmaObj={};
-  generatedShades.forEach(({stop,hex})=>{figmaObj[stop]={value:hex,type:'color'};});
-  const figma=JSON.stringify({primary:figmaObj},null,2);
-
-  const scssLines=generatedShades.map(({stop,hex})=>`$color-primary-${stop}: ${hex};`).join('\n');
-
-  exports={css,tw,figma,scss:scssLines};
-
-  document.getElementById('cd-css-out').textContent=css.length>300?css.slice(0,300)+'...':css;
-  document.getElementById('cd-tw-out').textContent=tw.length>300?tw.slice(0,300)+'...':tw;
-  document.getElementById('cd-figma-out').textContent=figma.length>300?figma.slice(0,300)+'...':figma;
-  document.getElementById('cd-scss-out').textContent=scssLines;
-}
-
-function copyExport(type,btn){
-  navigator.clipboard.writeText(exports[type]).catch(()=>{});
-  const orig=btn.textContent;
-  btn.textContent='copied';
-  btn.classList.add('done');
-  setTimeout(()=>{btn.textContent=orig;btn.classList.remove('done');},2000);
-}
-
-generate();
+// start from a shared link if present, e.g. #378add or #e5487a-brand
+const m = location.hash.match(/^#([0-9a-f]{6})(?:-(.+))?$/i);
+if (m) { state.hex = '#' + m[1].toLowerCase(); if (m[2]) state.name = decodeURIComponent(m[2]); $('#name').value = state.name; }
+setHex(state.hex);
 </script>
+</body>
+</html>
